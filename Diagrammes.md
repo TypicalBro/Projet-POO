@@ -4,19 +4,20 @@ code mermaid.live diagramme de classe
  
  
  
+ 
 classDiagram
     class Jeu {
-        - bool mode_graphique
-        - int nb_iterations
+        # bool mode_graphique
+        # int nb_iterations
         + void charger_fichier_entree()
         + demarrer_simulation()
         + creation_fichier_sortie()
     }
 
     class Grille {
-        - int largeur
-        - int hauteur
-        - map cellules
+        # int largeur
+        # int hauteur
+        # map cellules
         + void initialiser(hauteur, largeur)
         + int[2]obtenir_voisins(Coordonnee)
         + void mise_a_jour()
@@ -55,6 +56,8 @@ classDiagram
     Cellule ..> Regle_Jeu : dépendance
     Cellule --> EtatVivante
     Cellule --> EtatMorte
+
+
 
 
 
