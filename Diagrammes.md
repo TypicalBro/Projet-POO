@@ -5,6 +5,7 @@ code mermaid.live diagramme de classe
  
  
  
+ 
 classDiagram
     class Jeu {
         # bool mode_graphique
@@ -32,14 +33,6 @@ classDiagram
         + void calcul_etat(bool Regle)
     }
 
-    class EtatVivante {
-        + est_vivante() : bool
-    }
-
-    class EtatMorte {
-        + est_vivante() : bool
-    }
-
     class Regle_Jeu {
         + bool Regle_1(int x,int y)
         + bool Regle_2(int x,int y)
@@ -54,14 +47,7 @@ classDiagram
     Jeu --> Grille
     Jeu --> Cellule
     Cellule ..> Regle_Jeu : dépendance
-    Cellule --> EtatVivante
-    Cellule --> EtatMorte
-
-
-
-
-
-
+    
 
 ```
 
