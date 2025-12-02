@@ -43,8 +43,6 @@ classDiagram
     Jeu <-- Grille
     Jeu <-- Cellule
     Cellule ..> Regle_Jeu : dépendance
-    Cellule <-- EtatVivante
-    Cellule <-- EtatMorte
 
 
 ```
