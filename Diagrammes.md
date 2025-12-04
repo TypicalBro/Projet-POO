@@ -132,7 +132,7 @@ sequenceDiagram
     participant IView as View
 
     User->>main: ./game_of_life input.txt --mode=console
-    main->>Game: new Game(rule, view, maxIter)
+    main->>Game: new Game(IRule, IView, maxIter)
     main->>Game: loadFromFile("input.txt")
     Game->>FileLoader: load("input.txt")
     FileLoader-->>Game: Grid*
@@ -140,12 +140,12 @@ sequenceDiagram
     main->>Game: run()
 
     loop while !isStable() && currentIteration < maxIterations
-        Game->>View: initialize(grid) (première fois seulement)
-        Game->>View: render(grid)
+        Game->>IView: initialize(grid) (première fois seulement)
+        Game->>IView: render(grid)
 
-        Game->>Grid: computeNextStates(rule)
-        Grid->>Rule: computeNextState(cell, aliveNeighbors)
-        Rule-->>Grid: nextState
+        Game->>Grid: computeNextStates(IRule)
+        Grid->>IRule: computeNextState(cell, aliveNeighbors)
+        IRule-->>Grid: nextState
         Note over Grid: Stocke les nextStates pour toutes les cellules
 
         Game->>Grid: applyNextStates()
@@ -155,11 +155,10 @@ sequenceDiagram
             Game->>Game: set isStable = true
         end
 
-        Game->>View: waitNextStep()
+        Game->>IView: waitNextStep()
     end
 
     Game-->>main: terminaison
-
 ```
 
 Code mermaid.live diagramme d'activite
