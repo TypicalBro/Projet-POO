@@ -166,30 +166,37 @@ Code mermaid.live diagramme d'activite
 
 ```
 flowchart TD
-    A([Start]) --> B[Lire les arguments\n(chemin fichier, mode, maxIterations)]
-    B --> C[Charger la grille\nFileLoader::load(path)]
-    C --> D[Créer la règle\nConwayRule]
-    D --> E[Créer la vue\nConsoleView ou SFMLView]
-    E --> F[Créer Game(rule, view, maxIter)]
-    F --> G[initialIteration = 0]
-    G --> H[isStable = false]
+    A([Start])
+    B["Lire les arguments :\nchemin fichier, mode, maxIterations"]
+    C["Charger la grille\n(FileLoader::load)"]
+    D["Créer la règle\n(ConwayRule)"]
+    E["Créer la vue\n(ConsoleView ou SFMLView)"]
+    F["Créer Game(rule, view, maxIter)"]
+    G["iteration = 0"]
+    H["isStable = false"]
 
-    H --> I{Grille stable ?\nou\niteration >= maxIterations ?}
-    I -- Oui --> Z([Fin])
-    I -- Non --> J[Si première itération :\nview.initialize(grid)]
-    J --> K[view.render(grid)]
+    A --> B
+    B --> C
+    C --> D
+    D --> E
+    E --> F
+    F --> G
+    G --> H
 
-    K --> L[grid.computeNextStates(rule)]
-    L --> M[changed = grid.applyNextStates()]
+    H --> I{"Grille stable\nOU\niteration >= maxIterations ?"}
+    I -- "Oui" --> Z([Fin])
+    I -- "Non" --> J["Si première itération :\nview.initialize(grid)"]
+    J --> K["view.render(grid)"]
+    K --> L["grid.computeNextStates(rule)"]
+    L --> M["changed = grid.applyNextStates()"]
 
-    M --> N{changed == false ?}
-    N -- Oui --> O[isStable = true]
-    N -- Non --> P[isStable = false]
+    M --> N{"changed == false ?"}
+    N -- "Oui" --> O["isStable = true"]
+    N -- "Non" --> P["isStable = false"]
 
-    O --> Q[iteration++]
-    P --> Q[iteration++]
-
-    Q --> R[view.waitNextStep()\n(console : rien,\nGUI : attendre timer/UI)]
+    O --> Q["iteration++"]
+    P --> Q
+    Q --> R["view.waitNextStep()\n(console : rien,\nGUI : timer)"]
     R --> H
 
 ```
