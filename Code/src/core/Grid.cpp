@@ -1,83 +1,69 @@
 #include "Grid.hpp"
 #include "IRule.hpp"
+#include "ICellState.hpp"
+#include "Cell.hpp"
+#include "DeadState.hpp"
+
 
 using namespace std;
 
 Grid::Grid(int w, int h):width(w),height(h){
-    vector<Cell> temp2;
-    for (int i = 0; i < width; i++){
-        temp2.push_back(unique_ptr<ICellState>);
+    // On crée une grille height x width de cellules
+    cells.resize(height);
+    for (int y = 0; y < height; ++y) {
+        cells[y].reserve(width);
+        for (int x = 0; x < width; ++x) {
+            cells[y].emplace_back(
+                x, 
+                y,
+                std::make_unique<DeadState>()  // toutes mortes au départ
+            );
+        }
     }
-    vector<vector<Cell>> temp(h, temp2);
+
+    // Préparation de nextState
+    nextState.resize(height);
+    for (int y = 0; y < height; ++y) {
+        nextState[y].resize(width);
+    }
 }
 int Grid::getH(){return height;}
 int Grid::getW(){return width;}
 Cell& Grid::getCell(int x, int y){return cells[y][x];}
 int Grid::countAliveNeighbors(int x, int y){
     int count = 0;
-    if (x == 0){
-        if (y == 0){
-            if (getCell(x+1,y).isAlive()){count ++;}
-            if (getCell(x,y+1).isAlive()){count ++;}
-            if (getCell(x+1,y+1).isAlive()){count ++;}
-        }
-        else if (y == cells[0].size() - 1){
-            if (getCell(x+1,y).isAlive()){count ++;}
-            if (getCell(x,y-1).isAlive()){count ++;}
-            if (getCell(x+1,y-1).isAlive()){count ++;}
-        }
-        else{
-            if (getCell(x+1,y).isAlive()){count ++;}
-            if (getCell(x,y+1).isAlive()){count ++;}
-            if (getCell(x+1,y+1).isAlive()){count ++;}
-            if (getCell(x,y-1).isAlive()){count ++;}
-            if (getCell(x+1,y-1).isAlive()){count ++;}
-        }
-    }
-    else if (x == cells.size()-1){
-        if (y == 0){
-            if (getCell(x-1,y).isAlive()){count ++;}
-            if (getCell(x,y+1).isAlive()){count ++;}
-            if (getCell(x-1,y+1).isAlive()){count ++;}
-        }
-        else if (y == cells[0].size() - 1){
-            if (getCell(x-1,y).isAlive()){count ++;}
-            if (getCell(x,y-1).isAlive()){count ++;}
-            if (getCell(x-1,y-1).isAlive()){count ++;}
-        }
-        else{
-            if (getCell(x-1,y).isAlive()){count ++;}
-            if (getCell(x,y+1).isAlive()){count ++;}
-            if (getCell(x-1,y+1).isAlive()){count ++;}
-            if (getCell(x,y-1).isAlive()){count ++;}
-            if (getCell(x-1,y-1).isAlive()){count ++;}
-        }
-    }
-    else {
-        if (y == 0){
-            if (getCell(x-1,y).isAlive()){count ++;}
-            if (getCell(x+1,y).isAlive()){count ++;}
-            if (getCell(x,y+1).isAlive()){count ++;}
-            if (getCell(x+1,y+1).isAlive()){count ++;}
-            if (getCell(x-1,y+1).isAlive()){count ++;}
-        }
-        else if (y == cells[0].size() - 1){
-            if (getCell(x-1,y).isAlive()){count ++;}
-            if (getCell(x+1,y).isAlive()){count ++;}
-            if (getCell(x,y-1).isAlive()){count ++;}
-            if (getCell(x+1,y+1).isAlive()){count ++;}
-            if (getCell(x-1,y-1).isAlive()){count ++;}
-        }
-        else{
-            for (int i = -1; i < 2; i++){
-                for (int j = -1; j < 2; j++){
-                    if (getCell(x+j,y+i).isAlive() && !(i == 0 && j == 0)){count ++;}
-                }
+
+    for (int dy = -1; dy <= 1; ++dy) {
+        for (int dx = -1; dx <= 1; ++dx) {
+            // On ignore la cellule elle-même
+            if (dx == 0 && dy == 0) continue;
+
+            int nx = x + dx;
+            int ny = y + dy;
+
+            // Effet thorique de la grille
+            if (nx < 0){
+                nx += width;
+            }
+            else if (nx >= width){
+                nx -= width;
+            }
+            if (ny < 0){
+                ny += height;
+            }
+            else if (ny >= height){
+                ny -= height;
+            }
+
+            if (getCell(nx, ny).isAlive()) {
+                ++count;
             }
         }
     }
+
     return count;
 }
+
 void Grid::computeNextState(IRule& rule){
     nextState.resize(height);
     for (int i = 0; i < height; i++){
@@ -86,8 +72,8 @@ void Grid::computeNextState(IRule& rule){
     for (int i = 0; i < height; i++){
         for (int j = 0; j < width; j ++){
             Cell& cell = getCell(j, i);
-            int neighbors = countAliveNeighbors(j , i)
-            nextState[i][j] = rule.computeNextState(cell, neighbors)
+            int neighbors = static_cast<unsigned int>(countAliveNeighbors(j , i));
+            nextState[i][j] = rule.computeNextState(cell, neighbors);
         }
     }
 }
@@ -95,11 +81,12 @@ bool Grid::applyNextState(){
     bool change = false;
     for (int i = 0; i < height; i++){
         for (int j = 0; j < width; j ++){
-            if (cells[i][j].isAlive != nextState[i][j].isAlive){
+            if (cells[i][j].isAlive() != nextState[i][j]->isAlive()){
                 cells[i][j].setState(move(nextState[i][j]));
                 change = true;
             }
         }
     }
+    return change;
 }
 

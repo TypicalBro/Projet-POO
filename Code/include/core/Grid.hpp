@@ -1,25 +1,30 @@
 #pragma once
+
 #include <vector>
 #include <memory>
+
 #include "Cell.hpp"
 
-using namespace std;
-
 class IRule;
+class ICellState;
 
-class Grid{
-    private:
-    int width;
-    int height;
-    vectir<vector<Cell>>> cells;
-    vector<vector<unique_ptr<ICellState>>> nextState;
-    public:
-    Grid(int width,int height);
-    int getW();
+class Grid {
+public:
+    Grid(int w, int h);
+
     int getH();
+    int getW();
+
     Cell& getCell(int x, int y);
+
     int countAliveNeighbors(int x, int y);
-    void computeNextState(IRule rule);
+
+    void computeNextState(IRule& rule);
     bool applyNextState();
 
-}
+private:
+    int width;
+    int height;
+    std::vector<std::vector<Cell>> cells;
+    std::vector<std::vector<std::unique_ptr<ICellState>>> nextState;
+};

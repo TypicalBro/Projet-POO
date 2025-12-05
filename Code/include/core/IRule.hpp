@@ -1,17 +1,17 @@
-#pragma once //Protection contre les appels recursifs
+#pragma once
 
-#include <memory> //Pour eviter les fuites de memoire
+#include <memory>
 
-using namespace std;
-
-class Cell;         //Forward calling
-class ICellState;   //permet d'eviter les includes inutiles / circulaires
-                    //Faisable car nous avons seulement besoin des pointeurs des objets 
+class Cell;
+class ICellState;
 
 class IRule {
-    public:
-    virtual unique_ptr<ICellState> computeNextState(
-        const Cell& cell
-        unsigned int alive Neighbors
-    )
+public:
+    virtual ~IRule() = default;
+
+    // Même signature que dans ConwayRule.cpp
+    virtual std::unique_ptr<ICellState> computeNextState(
+        Cell& cell,
+        int aliveNeighbors
+    ) = 0;
 };

@@ -1,9 +1,10 @@
-#include "AliveState.hpp"
+#include "DeadState.hpp"
 
 using namespace std;
 
-bool AliveState::isAlive(){return false}
-unique_ptr<ICellState> AliveState::clone(){
-    unique_ptr<ICellState> temp = make_unique<AliveState>(*this);
+bool DeadState::isAlive(){return false;}
+
+unique_ptr<ICellState> DeadState::clone(){
+    unique_ptr<ICellState> temp = make_unique<DeadState>(*this);
     return temp;
-}   
+}

@@ -6,7 +6,8 @@
 using namespace std;
 
 unique_ptr<ICellState> ConwayRule::computeNextState(Cell& cell, int aliveNeighbors){
-    if (cell.isAlive()){
+    bool alive = cell.isAlive();
+    if (alive){
         if (aliveNeighbors == 2 || aliveNeighbors == 3){
             return make_unique<AliveState>();
         }

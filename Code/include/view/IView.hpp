@@ -1,12 +1,12 @@
 #pragma once
 
-
 class Grid;
 
-class IView{
+class IView {
+public:
+    virtual ~IView() = default;
+
     virtual void init(Grid& grid) = 0;
     virtual void render(Grid& grid) = 0;
-    virtual void waitNextStep() = 0;
-
-    virtual ~IView();
-}
+    virtual bool waitNextStep() = 0;
+};

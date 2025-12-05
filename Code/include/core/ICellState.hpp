@@ -1,11 +1,12 @@
-#pragma once //Protection contre les appels recursifs
+#pragma once
 
-#include <memory> //Pour eviter les fuites de memoire
+#include <memory>
 
-using namespace std;
+class ICellState {
+public:
+    virtual ~ICellState() = default;
 
-class ICellState{
-    public:
-    virtual bool isAlive();
-    virtual unique_ptr<ICellState> clone();
+    // Non-const pour coller à tes implémentations existantes
+    virtual bool isAlive() = 0;
+    virtual std::unique_ptr<ICellState> clone() = 0;
 };

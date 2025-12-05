@@ -1,20 +1,22 @@
 #pragma once
+
+#include <memory>
 #include "ICellState.hpp"
 
-using namespace std;
+class Cell {
+public:
+    Cell(int x, int y, std::unique_ptr<ICellState> initialState);
 
-class Cell{
-    private:
-    int x;
-    int y;
-
-    unique_ptr<ICellState> state;
-
-    public:
-    Cell(int x, int y, unique_ptr<ICellState> state);
     int getx();
     int gety();
+
     bool isAlive();
-    const ICellState& getState();
-    void setState(unique_ptr<ICellState> state);
+
+    ICellState& getState();
+    void setState(std::unique_ptr<ICellState> newState);
+
+private:
+    int x;
+    int y;
+    std::unique_ptr<ICellState> state;
 };
