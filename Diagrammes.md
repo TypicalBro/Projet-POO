@@ -128,8 +128,8 @@ sequenceDiagram
     participant Game
     participant FileLoader
     participant Grid
-    participant IRule as Rule
-    participant IView as View
+    participant Rule
+    participant View
 
     User->>main: ./game_of_life input.txt --mode=console
     main->>Game: new Game(rule, view, maxIter)
@@ -140,13 +140,13 @@ sequenceDiagram
     main->>Game: run()
 
     loop while !isStable() && currentIteration < maxIterations
-        Game->>View: initialize(grid) (première fois seulement)
+        Game->>View: initialize(grid) (1ère fois seulement)
         Game->>View: render(grid)
 
         Game->>Grid: computeNextStates(rule)
         Grid->>Rule: computeNextState(cell, aliveNeighbors)
         Rule-->>Grid: nextState
-        Note over Grid: Stocke les nextStates pour toutes les cellules
+        Note over Grid: Stocke les nextStates<br/>pour toutes les cellules
 
         Game->>Grid: applyNextStates()
         Grid-->>Game: bool changed
